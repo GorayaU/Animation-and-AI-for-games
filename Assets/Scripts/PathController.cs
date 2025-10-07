@@ -11,6 +11,9 @@ public class PathController : MonoBehaviour
 
     public float moveSpeed;
     public float rotateSpeed;
+    public Animator animator;
+    
+    private bool isWalking;
 
     private void Start()
     {
@@ -18,6 +21,23 @@ public class PathController : MonoBehaviour
         if (thePath != null && thePath.Count > 0)
         {
             target = thePath[0];
+        }
+
+        isWalking = false;
+        animator.SetBool("isWalking", isWalking);
+    }
+    
+    private void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            isWalking = !isWalking;
+            animator.SetBool("isWalking", isWalking);
+        }
+        if (isWalking)
+        {
+            rotateTowardsTarget();
+            moveForward();
         }
     }
 
@@ -41,12 +61,6 @@ public class PathController : MonoBehaviour
 
         Vector3 moveDir = Vector3.forward;
         transform.Translate(moveDir * stepSize);
-    }
-
-    private void Update()
-    {
-        rotateTowardsTarget();
-        moveForward();
     }
 
     private void OnTriggerEnter(Collider other)
